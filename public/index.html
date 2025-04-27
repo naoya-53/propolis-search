@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>プロポリス検索</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .search-container {
+      position: relative;
+      width: 400px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 50px 12px 15px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      outline: none;
+      background: white;
+      box-sizing: border-box;
+
+    }
+
+
+    .search-button {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .search-button img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="search-container">
+    <form action="/search-results.html" method="get" class="search-form">
+      <input type="text" name="query" class="search-input" placeholder="検索" required>
+      <button type="submit" class="search-button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Magnifying_glass_icon.svg" alt="検索">
+      </button>
+    </form>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>検索結果</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+    }
+
+    .search-container {
+      position: relative;
+      width: 400px;
+      margin: 0 auto 40px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 50px 12px 15px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      background: white;
+      box-sizing: border-box;
+
+    }
+
+
+    .search-button {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+
+    .search-button img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .results-area {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .search-result {
+      padding: 20px;
+      border-bottom: 1px solid #ddd;
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 20px;
+
+    }
+
+
+
+    .result-title {
+      font-size: 18px;
+      color: #1a0dab;
+      margin: 0 0 5px;
+    }
+
+    .result-url {
+      font-size: 14px;
+      color: #006621;
+      margin-bottom: 8px;
+    }
+
+    .result-description {
+      font-size: 14px;
+      color: #545454;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="search-container">
+    <form action="/search-results.html" method="get" class="search-form">
+      <input type="text" name="query" class="search-input" id="currentQuery" placeholder="検索" required>
+      <button type="submit" class="search-button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Magnifying_glass_icon.svg" alt="検索">
+      </button>
+    </form>
+  </div>
+  
+    
+  <p id="resultCount" style="text-align:center; color:#777; margin-bottom:20px;">検索結果：0件</p>
+
+  <div class="results-area" id="searchResults"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const query = urlParams.get('query');
+      const resultArea = document.getElementById('searchResults');
+      const inputBox = document.getElementById('currentQuery');
+
+      if (query) {
+        inputBox.value = query;
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        
+        document.getElementById('resultCount').textContent = `検索結果：${data.results.length}件`;
+
+        if (data.results.length === 0) {
+          resultArea.innerHTML = '<p>該当する結果はありませんでした。</p>';
+        } else {
+          resultArea.innerHTML = '';
+          data.results.forEach(item => {
+            const el = document.createElement('div');
+            el.classList.add('search-result');
+            el.innerHTML = `
+              <p class="result-title">${item.title}</p>
+              <p class="result-url">${item.url}</p>
+              <p class="result-description">${item.description}</p>
+            `;
+            resultArea.appendChild(el);
+          });
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
