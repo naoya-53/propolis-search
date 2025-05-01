@@ -99,25 +99,34 @@
 
   <div class="results-area" id="searchResults"></div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', async function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const query = urlParams.get('query');
-      const resultArea = document.getElementById('searchResults');
-      const inputBox = document.getElementById('currentQuery');
+<script>
+  document.addEventListener('DOMContentLoaded', async function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('query');
+    const resultArea = document.getElementById('searchResults');
+    const inputBox = document.getElementById('currentQuery');
+    const resultCount = document.getElementById('resultCount');
 
-      if (query) {
-        inputBox.value = query;
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
+    if (query) {
+      inputBox.value = query;
+      try {
         
-        document.getElementById('resultCount').textContent = `検索結果：${data.results.length}件`;
+const res = await fetch('data.json');
+const data = await res.json();
 
-        if (data.results.length === 0) {
+// ?? クライアント側でフィルタリング（大小文字を無視して一致させる）
+const filtered = data.filter(item =>
+  item.title.toLowerCase().includes(query.toLowerCase()) ||
+  item.description.toLowerCase().includes(query.toLowerCase())
+);
+
+        resultCount.textContent = `検索結果：${filtered.length}件`;
+
+        if (filtered.length === 0) {
           resultArea.innerHTML = '<p>該当する結果はありませんでした。</p>';
         } else {
           resultArea.innerHTML = '';
-          data.results.forEach(item => {
+          filtered.forEach(item => {
             const el = document.createElement('div');
             el.classList.add('search-result');
             el.innerHTML = `
@@ -128,14 +137,14 @@
             resultArea.appendChild(el);
           });
         }
+      } catch (err) {
+        resultArea.innerHTML = '<p>データの読み込みに失敗しました。</p>';
+        console.error(err);
       }
-    });
-  </script>
+    }
+  });
+</script>
+
 
 </body>
 </html>
-
-
-
-
-
